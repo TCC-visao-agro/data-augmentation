@@ -1,44 +1,31 @@
 from skimage import transform, io, img_as_ubyte
+from random import randint
+
 import os
-from glob import glob
-import numpy as np
 
-def nameImage(dir):
+original_images_path = "./images"
+rotated_images_path = "./rotated_images"
 
-    qCarac = -len(dir)-1
-    name_image = ""
-    i = 0
+classes = os.listdir(original_images_path)
 
-    for x in range(-1, qCarac, -1):
-        if dir[x] == "\\":
-            break
-        i = i + 1
-    return dir[(len(dir) - i): -4]
+for leaf_class in classes:
+    leaves = os.listdir(f"{original_images_path}/{leaf_class}")
 
+    for leaf in leaves:
+        leaf_original_path = f"{original_images_path}/{leaf_class}/{leaf}"
 
+        tomato_leaf = io.imread(leaf_original_path)
 
+        angle = randint(-180, 180)
 
-angle_rotate = [-50, 60]
+        rotated_leaf = transform.rotate(tomato_leaf, angle=angle, cval=0)
 
+        new_file_name = os.path.basename(leaf_original_path).replace(".jpg", "") + f"_rotated_{angle}"
 
-img_original = glob(os.path.join(os.getcwd() + "\\data-augmentation\\images\\",'*.jpg'))
-img_rotate_save = os.getcwd() + "\\data-augmentation\\images_rotate\\"
-i=0
+        if not os.path.exists(f"{rotated_images_path}/{leaf_class}"):
+            os.makedirs(f"{rotated_images_path}/{leaf_class}")
 
-for fn in img_original:
-
-    print("FN: " + fn)
-    name_img = nameImage(fn)
-
-    tomatoLeafRotate = io.imread(fn)
-
-    for x in angle_rotate:
-        rotatedLeaf = transform.rotate(tomatoLeafRotate, angle=x, cval=0)
-
-
-        io.imsave(img_rotate_save + name_img + "_" + str(x) + ".jpg" , img_as_ubyte(rotatedLeaf))
-
-
-
+        io.imsave(f"{rotated_images_path}/{leaf_class}/{leaf}", img_as_ubyte(tomato_leaf))
+        io.imsave(f"{rotated_images_path}/{leaf_class}/{new_file_name}.jpg", img_as_ubyte(rotated_leaf))
 
 
