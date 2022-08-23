@@ -1,6 +1,8 @@
 from transform.transform import *
 from background_addition.background_addition import background_addition
-from os.file_management import FileManagement
+from files_operation.FileManagement import FileManagement
+
+TIMES_TO_AUGMENT = 5
 
 
 def main():
@@ -8,28 +10,32 @@ def main():
 
     classes = file_management.get_classes()
 
+    new_leaves = 0
+
+    print("Augmenting...\n")
+
     for leaf_class in classes:
         leaves = file_management.get_leaves(leaf_class)
 
         for leaf in leaves:
-            tomato_leaf = file_management.get_leaf(leaf)
 
-            first_background = file_management.get_random_bg()
-            second_background = file_management.get_random_bg()
+            for _ in range(TIMES_TO_AUGMENT):
 
-            first_background_flipped = flip(first_background)
-            second_background_flipped = flip(second_background)
+                tomato_leaf = file_management.get_leaf(leaf)
 
-            rotated_image = rotate(tomato_leaf)
+                background = file_management.get_random_bg()
 
-            first_image_mounted = background_addition(foreground_image=tomato_leaf,
-                                                      background_image=first_background_flipped)
+                background_flipped = flip(background)
 
-            second_image_mounted = background_addition(foreground_image=rotated_image,
-                                                       background_image=second_background_flipped)
+                rotated_image = rotate(tomato_leaf)
 
-            file_management.save(first_image_mounted)
-            file_management.save(second_image_mounted)
+                image_mounted = background_addition(foreground_image=rotated_image,
+                                                    background_image=background_flipped)
+
+                file_management.save(image_mounted)
+                new_leaves += 1
+
+    print(f"Finished data augmentation. Leaves={new_leaves}")
 
 
 if __name__ == "__main__":

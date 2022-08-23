@@ -10,9 +10,9 @@ class FileManagement:
     def __init__(self):
         self.leaf_class = ""
         self.leaf = ""
-        self.bgs_path = "../bgs"
-        self.original_images_path = "../images"
-        self.rotated_images_path = "../rotated_images"
+        self.bgs_path = "./bgs"
+        self.original_images_path = "./images"
+        self.rotated_images_path = "./rotated_images"
 
     def get_classes(self):
         return os.listdir(self.original_images_path)
@@ -38,7 +38,7 @@ class FileManagement:
 
         self.__check_if_directory_not_exists()
 
-        imwrite(filename=filename, img=image)
+        imwrite(filename=f"{self.rotated_images_path}/{self.leaf_class}/{filename}", img=image)
 
     def __check_if_directory_not_exists(self):
         if not os.path.exists(f"{self.rotated_images_path}/{self.leaf_class}"):

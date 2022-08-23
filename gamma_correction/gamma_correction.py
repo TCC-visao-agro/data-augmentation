@@ -8,4 +8,4 @@ def gamma_correction(src, gamma):
     table = [((i / 255) ** inv_gamma) * 255 for i in range(256)]
     table = np.array(table, np.uint8)
 
-    return cv2.LUT(src, table)
+    return cv2.LUT(np.array(src), table)
