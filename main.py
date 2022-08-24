@@ -13,16 +13,12 @@ def main():
 
     total_leaves = 0
 
-    for leaf_class in classes:
-        total_leaves += len(file_management.get_leaves(leaf_class))
-
     print("Augmenting...\n")
-    with alive_bar(total_leaves * TIMES_TO_AUGMENT, force_tty=True, title="Augmentation") as bar:
-        for leaf_class in classes:
-            leaves = file_management.get_leaves(leaf_class)
 
-            print(f"Augmenting the class {leaf_class}...")
+    for leaf_class in classes:
+        leaves = file_management.get_leaves(leaf_class)
 
+        with alive_bar(len(leaves) * TIMES_TO_AUGMENT, force_tty=True, title=f"{leaf_class}") as bar:
             for leaf in leaves:
                 bar.text = f"{leaf_class}"
 
@@ -41,8 +37,9 @@ def main():
 
                     file_management.save(image_mounted)
                     bar()
+                    total_leaves += 1
 
-    print("Finished data augmentation!")
+    print(f"Finished data augmentation!. Total augmented = {total_leaves}")
 
 
 if __name__ == "__main__":
