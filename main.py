@@ -1,8 +1,9 @@
 from transform.transform import *
 from background_addition.background_addition import background_addition
 from files_operation.FileManagement import FileManagement
+from alive_progress import alive_bar
 
-TIMES_TO_AUGMENT = 5
+TIMES_TO_AUGMENT = 3
 
 
 def main():
@@ -10,32 +11,38 @@ def main():
 
     classes = file_management.get_classes()
 
-    new_leaves = 0
-
-    print("Augmenting...\n")
+    total_leaves = 0
 
     for leaf_class in classes:
-        leaves = file_management.get_leaves(leaf_class)
+        total_leaves += len(file_management.get_leaves(leaf_class))
 
-        for leaf in leaves:
+    print("Augmenting...\n")
+    with alive_bar(total_leaves * TIMES_TO_AUGMENT, force_tty=True, title="Augmentation") as bar:
+        for leaf_class in classes:
+            leaves = file_management.get_leaves(leaf_class)
 
-            for _ in range(TIMES_TO_AUGMENT):
+            print(f"Augmenting the class {leaf_class}...")
 
-                tomato_leaf = file_management.get_leaf(leaf)
+            for leaf in leaves:
+                bar.text = f"{leaf_class}"
 
-                background = file_management.get_random_bg()
+                for _ in range(TIMES_TO_AUGMENT):
 
-                background_flipped = flip(background)
+                    tomato_leaf = file_management.get_leaf(leaf)
 
-                rotated_image = rotate(tomato_leaf)
+                    background = file_management.get_random_bg()
 
-                image_mounted = background_addition(foreground_image=rotated_image,
-                                                    background_image=background_flipped)
+                    background_flipped = flip(background)
 
-                file_management.save(image_mounted)
-                new_leaves += 1
+                    rotated_image = rotate(tomato_leaf)
 
-    print(f"Finished data augmentation. Leaves={new_leaves}")
+                    image_mounted = background_addition(foreground_image=rotated_image,
+                                                        background_image=background_flipped)
+
+                    file_management.save(image_mounted)
+                    bar()
+
+    print("Finished data augmentation!")
 
 
 if __name__ == "__main__":

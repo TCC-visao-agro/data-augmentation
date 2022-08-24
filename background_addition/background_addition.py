@@ -15,7 +15,7 @@ def background_addition(foreground_image, background_image):
     for i in range(width):
         for j in range(height):
             pixel = foreground_corrected[j, i]
-            if np.allclose(pixel, [0, 0, 0], rtol=20, atol=20):
+            if np.allclose(pixel, [0, 0, 0], rtol=10, atol=10):
                 foreground_corrected[j, i] = bg_resized[j, i]
 
     return foreground_corrected
