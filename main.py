@@ -18,7 +18,7 @@ def main():
     for leaf_class in classes:
         leaves = file_management.get_leaves(leaf_class)
 
-        with alive_bar(len(leaves) * TIMES_TO_AUGMENT, force_tty=True, title=f"{leaf_class}") as bar:
+        with alive_bar(len(leaves) * TIMES_TO_AUGMENT, force_tty=True, title=leaf_class) as bar:
             for leaf in leaves:
                 bar.text = f"{leaf_class}"
 
