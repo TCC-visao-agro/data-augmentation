@@ -32,7 +32,7 @@ class FileManagement:
     def save(self, image):
         leaf_label = uuid.uuid4()
 
-        original_leaf_name = os.path.basename(self.leaf).split("__")[1]
+        original_leaf_name = os.path.basename(self.leaf).split("_")[1]
 
         filename = f"{leaf_label}__{original_leaf_name}"
 
