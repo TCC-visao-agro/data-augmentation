@@ -1,7 +1,8 @@
-import cv2
 from gamma_correction.gamma_correction import gamma_correction
 
+import cv2
 import numpy as np
+from rembg import remove
 from cv2 import resize, INTER_CUBIC
 
 
@@ -35,20 +36,14 @@ def add_background_color(foreground_image, color):
 
 
 def find_binary_image(image):
-    gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    segmented_image = remove(image)
 
-    _, threshold_image = cv2.threshold(gray_image, 20, 255, cv2.THRESH_BINARY)
+    gray_image = cv2.cvtColor(segmented_image, cv2.COLOR_BGR2GRAY)
 
-    gray = cv2.morphologyEx(threshold_image, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (11, 11)))
+    return gray_image.astype(bool)
 
-    contours, _ = cv2.findContours(gray, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-
-    large_contours = []
-    for contour in contours:
-        if cv2.contourArea(contour) > 10000:
-            large_contours.append(contour)
-
-    gray = np.uint8(np.zeros(gray.shape))
-    segmented_leaf = cv2.drawContours(gray, large_contours, -1, 255, cv2.FILLED)
-
-    return segmented_leaf.astype(bool)
+#
+# new_image = cv2.imread("image.jpg")
+# output = add_background_color(new_image, [255, 255, 255])
+#
+# cv2.imwrite("output2.jpg", output)
